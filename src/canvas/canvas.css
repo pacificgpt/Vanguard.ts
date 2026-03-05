@@ -1,0 +1,143 @@
+/* ── Vanguard.ts Spatial Canvas Styles ── */
+
+/* Global resets */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #11111b;
+  color: #cdd6f4;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Header ── */
+.vg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: rgba(30, 30, 46, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #45475a;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.vg-logo {
+  font-size: 22px;
+  color: #89b4fa;
+  filter: drop-shadow(0 0 6px #89b4fa88);
+}
+
+.vg-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #89b4fa, #cba6f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.vg-status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+}
+
+.vg-status-badge.online {
+  color: #a6e3a1;
+  background: rgba(166, 227, 161, 0.12);
+  border: 1px solid rgba(166, 227, 161, 0.25);
+}
+
+.vg-status-badge.offline {
+  color: #f38ba8;
+  background: rgba(243, 139, 168, 0.12);
+  border: 1px solid rgba(243, 139, 168, 0.25);
+}
+
+/* ── Log Panel ── */
+.vg-log-panel {
+  width: 360px;
+  max-height: 200px;
+  background: rgba(30, 30, 46, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #45475a;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.vg-log-header {
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a6adc8;
+  border-bottom: 1px solid #313244;
+}
+
+.vg-log-body {
+  padding: 8px 14px;
+  font-size: 12px;
+  font-family: 'Cascadia Code', 'Fira Code', monospace;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.vg-log-line {
+  padding: 2px 0;
+  color: #bac2de;
+  opacity: 0.85;
+}
+
+.vg-log-line:last-child {
+  opacity: 1;
+  color: #cdd6f4;
+}
+
+/* ── React Flow overrides ── */
+.react-flow__node {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.react-flow__edge-path {
+  transition: stroke 0.3s ease;
+}
+
+.react-flow__controls button {
+  background: #1e1e2e !important;
+  color: #cdd6f4 !important;
+  border-color: #45475a !important;
+}
+
+.react-flow__controls button:hover {
+  background: #313244 !important;
+}
+
+/* Scrollbar */
+.vg-log-body::-webkit-scrollbar {
+  width: 4px;
+}
+.vg-log-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.vg-log-body::-webkit-scrollbar-thumb {
+  background: #45475a;
+  border-radius: 4px;
+}

@@ -1,0 +1,42 @@
+{
+  "name": "vanguard.ts",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/server.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "server": "tsx src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "multi-agent",
+    "mcp",
+    "orchestrator",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "description": "Decentralized, compute-aware spatial multi-agent orchestrator for TypeScript 7.0",
+  "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.58",
+    "@ai-sdk/openai": "^3.0.41",
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@xyflow/react": "^12.10.1",
+    "ai": "^6.0.116",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^7.3.1",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/ws": "^8.18.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260305.1",
+    "@vitejs/plugin-react": "^5.1.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
