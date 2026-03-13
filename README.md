@@ -81,17 +81,20 @@ npm run server
 
 Vanguard.ts ships with **Google Gemini** as the default (free) provider. No billing is required — just grab a free API key:
 
-1. Go to [Google AI Studio](https://aistudio.google.com/apikey)
-2. Click **"Create API key"** (free, no credit card)
-3. Set the environment variable:
+1. Go to [Google AI Studio](https://aistudio.google.com/apikey) and click **"Create API key"** (free, no credit card)
+2. Copy the env template and add your key:
 
 ```bash
-# Linux / macOS
-export GOOGLE_GENERATIVE_AI_API_KEY="your-key-here"
-
-# Windows PowerShell
-$env:GOOGLE_GENERATIVE_AI_API_KEY="your-key-here"
+cp .env.example .env
 ```
+
+3. Open `.env` and paste your key:
+
+```env
+GOOGLE_GENERATIVE_AI_API_KEY=your-key-here
+```
+
+> ⚠️ **Never commit `.env` to git.** It's already in `.gitignore`. Use `.env.example` as the shareable template.
 
 That's it — CARM will automatically route prompts to **Gemini 2.0 Flash** (fast) and **Gemini 2.5 Pro** (frontier).
 

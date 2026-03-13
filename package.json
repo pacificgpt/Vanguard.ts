@@ -25,6 +25,7 @@
     "@modelcontextprotocol/sdk": "^1.27.1",
     "@xyflow/react": "^12.10.1",
     "ai": "^6.0.116",
+    "dotenv": "^17.3.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "vite": "^7.3.1",

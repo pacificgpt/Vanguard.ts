@@ -6,6 +6,7 @@
  * Spatial Delegative Canvas frontend.
  */
 
+import 'dotenv/config'
 import http from 'node:http'
 import { WebSocketServer, WebSocket } from 'ws'
 import { route, scoreComplexity, type RoutingDecision } from './router/carm.js'
