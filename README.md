@@ -19,7 +19,7 @@
 
 ## Features
 
-- **Compute-Aware Routing (CARM)** — Automatically evaluates prompt complexity and routes to the most cost-effective model. Low-complexity tasks go to fast/cheap models (`gpt-4o-mini`), high-complexity tasks route to frontier models (`claude-3.5-sonnet`).
+- **Compute-Aware Routing (CARM)** — Automatically evaluates prompt complexity and routes to the most cost-effective model. Ships with **free** Google Gemini models out of the box — no API billing required. Supports pluggable providers (OpenAI, Anthropic, Groq, Mistral, etc.).
 - **Native MCP Integration** — First-class [Model Context Protocol](https://modelcontextprotocol.io) client that connects to local servers via stdio, dynamically discovers tools, and caches the tool list.
 - **Corsa AST Validation** — Pipes agent-generated code into the `tsgo` binary (TypeScript 7.0 / Project Corsa Go-compiler) with `--incremental` to validate syntax and types in milliseconds before execution.
 - **Spatial Delegative Canvas** — React-based visual debugger powered by React Flow. Renders agents as interactive nodes on a graph with real-time status updates via WebSocket.
@@ -40,8 +40,9 @@
 │  CARM      │   MCP Client    │  Corsa Validator   │
 │  Router    │   (stdio)       │  (tsgo / tsc)      │
 ├────────────┼─────────────────┼────────────────────┤
-│ gpt-4o-mini│  Local MCP      │  TypeScript 7.0    │
-│ claude-3.5 │  Servers        │  Go-compiler       │
+│ Gemini     │  Local MCP      │  TypeScript 7.0    │
+│ OpenAI     │  Servers        │  Go-compiler       │
+│ Anthropic  │                 │                    │
 └────────────┴─────────────────┴────────────────────┘
 ```
 
@@ -76,20 +77,73 @@ npm run server
 | Spatial Canvas | http://localhost:5173   |
 | Orchestrator   | http://localhost:3000   |
 
-### Environment Variables
+### LLM Setup
 
-Set your API keys to enable AI model routing:
+Vanguard.ts ships with **Google Gemini** as the default (free) provider. No billing is required — just grab a free API key:
+
+1. Go to [Google AI Studio](https://aistudio.google.com/apikey)
+2. Click **"Create API key"** (free, no credit card)
+3. Set the environment variable:
 
 ```bash
-export OPENAI_API_KEY="sk-..."
-export ANTHROPIC_API_KEY="sk-ant-..."
+# Linux / macOS
+export GOOGLE_GENERATIVE_AI_API_KEY="your-key-here"
+
+# Windows PowerShell
+$env:GOOGLE_GENERATIVE_AI_API_KEY="your-key-here"
 ```
+
+That's it — CARM will automatically route prompts to **Gemini 2.0 Flash** (fast) and **Gemini 2.5 Pro** (frontier).
+
+<details>
+<summary><strong>🔌 Adding a New LLM Provider</strong></summary>
+
+The model registry lives in `src/config/models.ts`. To add a provider, do two things:
+
+**Step 1 — Install the Vercel AI SDK adapter:**
+
+```bash
+# Examples:
+npm install @ai-sdk/openai      # OpenAI
+npm install @ai-sdk/anthropic    # Anthropic
+npm install @ai-sdk/groq         # Groq (free tier available)
+npm install @ai-sdk/mistral      # Mistral
+```
+
+**Step 2 — Add an entry to `MODEL_REGISTRY` in `src/config/models.ts`:**
+
+```ts
+{
+  id: 'groq-llama',
+  name: 'Llama 3.3 70B (Groq)',
+  provider: '@ai-sdk/groq',
+  modelId: 'llama-3.3-70b-versatile',
+  tier: 'HIGH',                    // 'LOW' or 'HIGH'
+  free: true,
+  envKey: 'GROQ_API_KEY',
+  costMultiplier: 0,
+}
+```
+
+**Step 3 — Set the API key and done!** CARM will automatically pick the best available model per tier.
+
+| Provider  | Env Variable                      | Free Tier? |
+|-----------|-----------------------------------|------------|
+| Google    | `GOOGLE_GENERATIVE_AI_API_KEY`    | ✅ Yes      |
+| Groq      | `GROQ_API_KEY`                    | ✅ Yes      |
+| OpenAI    | `OPENAI_API_KEY`                  | ❌ Paid     |
+| Anthropic | `ANTHROPIC_API_KEY`               | ❌ Paid     |
+| Mistral   | `MISTRAL_API_KEY`                 | ❌ Paid     |
+
+</details>
 
 ## Project Structure
 
 ```
 vanguard/
 ├── src/
+│   ├── config/
+│   │   └── models.ts        # ⭐ Model Registry — add LLM providers here
 │   ├── router/
 │   │   └── carm.ts          # Compute-Aware Routing Matrix
 │   ├── mcp/
@@ -113,7 +167,7 @@ vanguard/
 | Layer           | Technology                                             |
 |-----------------|--------------------------------------------------------|
 | Runtime         | Node.js, TypeScript 7.0 (`@typescript/native-preview`) |
-| AI Routing      | Vercel AI SDK (`ai`, `@ai-sdk/openai`, `@ai-sdk/anthropic`) |
+| AI Routing      | Vercel AI SDK (`ai`, `@ai-sdk/google`, `@ai-sdk/openai`, `@ai-sdk/anthropic`) |
 | Tooling/Context | `@modelcontextprotocol/sdk` (MCP)                      |
 | Frontend        | React, Vite, `@xyflow/react` (React Flow)              |
 | Realtime Sync   | WebSocket (`ws`)                                       |
@@ -133,7 +187,7 @@ The orchestrator server communicates with the Canvas via JSON messages over WebS
 
 ```json
 { "event": "state:update", "data": { "nodes": [...], "edges": [...] } }
-{ "event": "route:result", "data": { "tier": "LOW", "model": "gpt-4o-mini", ... } }
+{ "event": "route:result", "data": { "tier": "LOW", "model": "Gemini 2.0 Flash", ... } }
 { "event": "validate:result", "data": { "valid": true, "durationMs": 12, ... } }
 ```
 
